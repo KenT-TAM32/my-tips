@@ -103,6 +103,24 @@ footer {
     }
   }
 }
+
+@media (max-width: 800px) {
+  footer {
+    small {
+      display: block;
+      float: none;
+      margin-bottom: 1em;
+    }
+    ul {
+      float: none;
+      padding: 0;
+      li {
+        float: none;
+        margin-left: 0;
+      }
+    }
+  }
+}
 /* サイドバー */
 
 aside {
@@ -168,6 +186,12 @@ input {
   }
 }
 
+/* ドロップダウンメニュー */
+
+.dropdown-menu.active {
+  display: block;
+}
+
 /* miscellaneous */
 
 .debug_dump {
@@ -176,6 +200,7 @@ input {
   width: 100%;
   margin-top: 45px;
 }
+
 
 
 
