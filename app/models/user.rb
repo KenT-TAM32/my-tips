@@ -93,11 +93,25 @@ class User < ApplicationRecord
     reset_sent_at < 2.hours.ago
   end
 
-  # 試作feedの定義
-  # 完全な実装は14章の「ユーザーをフォローする」を参照
+  # ユーザーのステータスフィードを返す(14章で正式に作成したもの)
   def feed
-     Micropost.where("user_id = ?", id)
+    # following_ids = "SELECt followed_id FROM relationships
+    #                  WHERE follower_id = :user_id"
+    # Micropost.where("user_id IN (#{following_ids}) 
+    #                  OR user_id = :user_id", user_id: id)
+    #          .includes(:user, image_attachment: :blob)
+
+    # Railsのleft_outer_joinsメソッドを使うと、いわゆるLEFT OUTER JOINで直接表現できる↓
+    path_of_feed = "relationships.follower_id = :id or microposts.user_id = :id"
+    Micropost.left_outer_joins(user: :followers) 
+             .where(path_of_feed, { id: id }).distinct
+             .includes(:user, image_attachment: :blob)
   end
+
+  # 試作feedの定義、完全な実装は14章の「ユーザーをフォローする」を参照↑
+  # def feed
+  #    Micropost.where("user_id = ?", id)
+  # end
 
   #ユーザーをフォローする
   def follow(other_user)
